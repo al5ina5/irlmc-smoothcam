@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.irlmc.smoothcam.mixin",
+  "client": [
+    "CameraSmoothMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

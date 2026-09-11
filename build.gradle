@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+    id 'net.neoforged.moddev' version "${moddev_plugin_version}"
+}
+
+group = 'com.irlmc'
+version = "${mod_version}"
+
+java {
+    // NeoForge 26.x / MC 26.x runs on Java 25. Mixins are compiled to Java 21
+    // bytecode so the bundled Mixin (0.8.7) can read them.
+    toolchain { languageVersion = JavaLanguageVersion.of(25) }
+}
+
+neoForge {
+    version = "${neoforge_version}"
+    validateAccessTransformers = false
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}

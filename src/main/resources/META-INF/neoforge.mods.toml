@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[2,)"
+license="MIT"
+
+[[mods]]
+modId="irlmc_smoothcam"
+version="0.1.0"
+displayName="IRL-MC SmoothCam"
+description="Client-only camera interpolation. Reconstructs the previous-tick camera pose a server teleport erases, so a headless camera account moved at 20 Hz renders as smooth motion. Only affects the local camera."
+authors="irl-mc"
+
+[[dependencies."irlmc_smoothcam"]]
+modId="neoforge"
+type="required"
+versionRange="[26.1.2,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies."irlmc_smoothcam"]]
+modId="minecraft"
+type="required"
+versionRange="[26.1.2,)"
+ordering="NONE"
+side="CLIENT"
+
+[[mixins]]
+config="irlmc_smoothcam.mixins.json"
