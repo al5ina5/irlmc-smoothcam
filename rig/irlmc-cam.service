@@ -1,0 +1,12 @@
+[Unit]
+Description=IRL-MC headless camera rig (waits for the MC server, then joins as directorcam)
+After=graphical-session.target network-online.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/share/irlmc-cam/run_gpu_camera.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
