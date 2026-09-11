@@ -10,6 +10,13 @@ for i in $(seq 1 150); do
     (exec 3<>/dev/tcp/127.0.0.1/25565) 2>/dev/null && { exec 3>&-; break; }
     sleep 2
 done
+# Also wait until the server has finished loading (port opens before "Done"),
+# otherwise the client joins and gets dropped mid-boot.
+for i in $(seq 1 120); do
+    grep -aq "Done (" /tmp/opencode/aether-server.log 2>/dev/null && break
+    sleep 2
+done
+sleep 5
 
 # Headless camera client (GPU via Xwayland)
 /tmp/opencode/prism/squashfs-root/AppRun \
