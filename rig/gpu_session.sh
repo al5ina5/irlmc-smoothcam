@@ -4,6 +4,13 @@
 unset WAYLAND_DISPLAY
 export DISPLAY="${DISPLAY:-:1}"
 
+# Wait for the Minecraft server to accept connections, else the client gets
+# "connection refused" and sits on the disconnect screen.
+for i in $(seq 1 150); do
+    (exec 3<>/dev/tcp/127.0.0.1/25565) 2>/dev/null && { exec 3>&-; break; }
+    sleep 2
+done
+
 # Headless camera client (GPU via Xwayland)
 /tmp/opencode/prism/squashfs-root/AppRun \
     --dir /tmp/opencode/prismdata \
