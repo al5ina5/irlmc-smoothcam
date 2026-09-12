@@ -53,11 +53,29 @@ while true; do
     echo "[rig] feeds started for window $W"
 
     # Monitor: keep running while the camera process is alive and the server is up.
+    # Also health-check that the camera account is actually ONLINE, so a client
+    # stuck on a menu / disconnect screen gets relaunched.
+    START=$(date +%s)
+    FAILS=0
     while kill -0 "$CAMPID" 2>/dev/null; do
-        sleep 5
+        sleep 10
         if ! server_up; then
             sleep 5
             server_up || { echo "[rig] server went down -> reconnecting"; break; }
+            continue
+        fi
+        if [ $(( $(date +%s) - START )) -lt 150 ]; then
+            continue  # grace period while the client loads and joins
+        fi
+        if [ "$(python3 "$BASE/cam_health.py" 2>/dev/null)" = "yes" ]; then
+            FAILS=0
+        else
+            FAILS=$((FAILS + 1))
+            echo "[rig] camera not online (fail $FAILS/3)"
+            if [ "$FAILS" -ge 3 ]; then
+                echo "[rig] camera stuck/offline -> relaunching"
+                break
+            fi
         fi
     done
 

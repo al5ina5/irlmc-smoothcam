@@ -1,0 +1,18 @@
+#!/bin/bash
+# IRL-MC camera rig control.
+BASE="$HOME/.local/share/irlmc-cam"
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+feeds() { ss -tln 2>/dev/null | grep -q ":$1" && echo "up" || echo "DOWN"; }
+case "$1" in
+  status)
+    echo "service : $(systemctl --user is-active irlmc-cam.service)"
+    echo "camera  : $(python3 "$BASE/cam_health.py" 2>/dev/null)  (yes = directorcam in-game)"
+    echo "browser : :8080 $(feeds 8080)"
+    echo "OBS     : :8090 $(feeds 8090)"
+    ;;
+  start)   systemctl --user start  irlmc-cam.service && echo "camera rig started" ;;
+  stop)    systemctl --user stop   irlmc-cam.service && echo "camera rig stopped" ;;
+  restart|refresh) systemctl --user restart irlmc-cam.service && echo "camera rig restarted" ;;
+  logs)    journalctl --user -u irlmc-cam.service -n 60 --no-pager ;;
+  *) echo "usage: camctl {status|start|stop|restart|refresh|logs}" ;;
+esac
